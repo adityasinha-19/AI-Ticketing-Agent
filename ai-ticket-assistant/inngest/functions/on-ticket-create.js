@@ -48,6 +48,30 @@ export const onTicketCreated = inngest.createFunction(
         }
         return skills;
       });
-    } catch (error) {}
+
+      const moderator = await step.run("assign-moderator", async () => {
+        let user = await User.findOne({
+          role: "moderator",
+          skills: {
+            $elemMatch: {
+              $regex: relatedSkills.join("|"),
+              $options: "i",
+            },
+          },
+        });
+        if (!user) {
+          user = await User.findOne({
+            role: "admin",
+          });
+        }
+        await Ticket.findByIdAndUpdate(ticket._id, {
+          assignedTo: user?._id || null,
+        });
+        return user;
+      });
+    } catch (error) {
+      console.log("Error running the step", error.message);
+      return { success: false };
+    }
   }
 );
