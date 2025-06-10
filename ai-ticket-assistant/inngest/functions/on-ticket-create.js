@@ -3,7 +3,7 @@ import User from "../../models/user.model.js";
 import { NonRetriableError } from "inngest";
 import { sendMail } from "../../utils/mailer.js";
 import Ticket from "../../models/ticket.model.js";
-import analyzeTicket from "../../utils/ai.js";
+import analyzeTicket from "../../utils/ai-ticket-analyzer.js";
 
 export const onTicketCreated = inngest.createFunction(
   {
@@ -69,6 +69,17 @@ export const onTicketCreated = inngest.createFunction(
         });
         return user;
       });
+
+      await step.run("send-email-notification", async () => {
+        let finalTicket = await Ticket.findById(ticket._id);
+        await sendMail(
+          moderator,
+          "Ticket assigned",
+          `A new Ticket is assigned to you ${finalTicket.title}`
+        );
+      });
+
+      return { success: true };
     } catch (error) {
       console.log("Error running the step", error.message);
       return { success: false };
