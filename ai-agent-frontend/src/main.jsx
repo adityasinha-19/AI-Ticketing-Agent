@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CheckAuth from "./components/CheckAuth.jsx";
 import Tickets from "./pages/tickets.jsx";
 import TicketDetailsPage from "./pages/ticket.jsx";
-import Admin from "./pages/admin.jsx";
+import AdminPanel from "./pages/admin.jsx";
 import Signup from "./pages/signup.jsx";
 import Login from "./pages/login.jsx";
 
@@ -33,7 +33,7 @@ createRoot(document.getElementById("root")).render(
           path="/admin"
           element={
             <CheckAuth protected={true}>
-              <Admin />
+              <AdminPanel />
             </CheckAuth>
           }
         />
