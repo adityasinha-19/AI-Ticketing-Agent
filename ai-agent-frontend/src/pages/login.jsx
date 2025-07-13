@@ -67,7 +67,7 @@ function Login() {
               className="btn btn-primary w-full"
               disabled={loading}
             >
-              {loading} ? "Looging in" : "Login"
+              {loading ? "Logging in" : "Login"}
             </button>
           </div>
         </form>
